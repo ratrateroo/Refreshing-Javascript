@@ -3,6 +3,8 @@
 searchButton.addEventListener('click', searchWeather);
 
 function searchWeather() {
+    loadingText.style.display = 'block';
+    weatherBox.style.display = 'none';
     var cityName = searchCity.value;
     if (cityName.trim().length == 0) {
         return alert('Please enter a city name.');
@@ -18,10 +20,20 @@ function searchWeather() {
             var data = JSON.parse(http.responseText);
             var weatherData = new Weather(cityName, data.weather[0].description.toUpperCase());
             weatherData.temperature = data.main.temp;
-            console.log(weatherData);
+            updateWeather(weatherData);
         } else if (http.readyState === XMLHttpRequest.DONE) {
             alert('Something went wrong!');
         }
     };
     http.send();
+}
+
+function updateWeather(weatherData){
+    
+    var capitalize = weatherData.cityName.charAt(0).toUpperCase() + weatherData.cityName.slice(1);
+    weatherCity.textContent = capitalize;
+    weatherDescription.textContent = weatherData.description;
+    weatherTemperature.textContent = weatherData.temperature;
+    loadingText.style.display = 'none';
+    weatherBox.style.display = 'block';
 }
